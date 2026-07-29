@@ -14,16 +14,16 @@ console.log(state,"ssss")
   useEffect(()=>{
      if(!state) return;
 
-        if(state.success){
-            toast.success(state.message || "Login Successful");
+        // if(state.success){
+        //     toast.success(state.message || "Login Successful");
             
-        }
+        // }
         // router.push("/dashboard") redirect another page
   
         if(!state.success){
             toast.error(state.message || "Login failed");
         }
-  })
+  },[state]);
 
   return (
 
@@ -36,7 +36,12 @@ console.log(state,"ssss")
             Enter your email below to login to your account
           </CardDescription>
           <CardAction>
-            <Button variant="link">Sign Up</Button>
+            <a
+              href="/register"
+              className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+            >
+              Sign Up
+            </a>
           </CardAction>
         </CardHeader>
         <CardContent>

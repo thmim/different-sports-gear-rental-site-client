@@ -1,6 +1,7 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
 type loginState = {
   success:boolean,
@@ -49,10 +50,16 @@ if(result.success){
     sameSite:"lax"
   })
 
-  // redirect("/dashboard","push");  // redirect users desire page after successful login
+ redirect("/customer-dashboard","replace");  // redirect users desire page after successful login
   
   }
  return result;
  
 }
 
+
+
+// register action
+export const registerAction = async(formData:FormData) =>{
+console.log(formData)
+}
