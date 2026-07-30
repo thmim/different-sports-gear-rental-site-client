@@ -7,7 +7,7 @@ export default async function PublicLayout({
   children: React.ReactNode;
 }>) {
     const user = await getMe();
-    console.log(user,"lay")
+    
   return (
     
       <div className="min-h-full flex flex-col">

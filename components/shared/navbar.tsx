@@ -58,7 +58,7 @@ interface MenuItem {
 
 // nav items array 
 const NAV_ITEMS = [
-  { label: "Browse Gear", href: "/gear" },
+  { label: "Browse Gear", href: "/gears" },
   { label: "Categories", href: "/categories" },
   { label: "How it Works", href: "/how-it-works" },
   { label: "List Your Gear", href: "/list-gear" },
