@@ -60,6 +60,92 @@ if(result.success){
 
 
 // register action
-export const registerAction = async(formData:FormData) =>{
-console.log(formData)
-}
+// export const registerAction = async(formData:FormData) =>{
+// console.log(formData)
+// const name = formData.get("fullName")
+// const email = formData.get("email")
+// const password = formData.get("password")
+// const confirmPassword = formData.get("confirmPassword")
+
+// // if password does not match
+// if (password !== confirmPassword) {
+//     return {
+//       success: false,
+//       message: "Passwords do not match",
+//     };
+//   }
+
+
+//   const payload = {
+//       name: String(name).trim(),
+//       email: String(email).trim(),
+//       password,
+//     };
+
+//   const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/register`,{
+//     method:"POST",
+//     headers:{
+//         "content-type":"application/json"
+//     },
+//     body:JSON.stringify(payload)
+// })
+// const result = await res.json();
+// if(result.success){
+// redirect("/login","replace");
+// }
+// console.log(result)
+// return result;
+
+// }
+
+
+// export const registerAction = async (formData: FormData) => {
+//   "use server"
+//   console.log(formData)
+//   const name = formData.get("fullName");
+//   const email = formData.get("email");
+//   const password = formData.get("password");
+//   const confirmPassword = formData.get("confirmPassword");
+
+//   if (password !== confirmPassword) {
+//     console.log("not matched")
+//     return {
+//       success: false,
+//       message: "Passwords do not match",
+//     };
+//   }
+
+//   try {
+//     const payload = {
+//       name: String(name).trim(),
+//       email: String(email).trim(),
+//       password,
+//     };
+
+//     const res = await fetch(
+//       `${process.env.BACKEND_API_URL}/api/auth/register`,
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(payload),
+//       }
+//     );
+// console.log(res,"response")
+//     const result = await res.json();
+// console.log(result,"fetch result")
+// console.log(result.success,"fetch result")
+//     if (result.success) {
+//       redirect("/login");
+//     }
+
+//     return result;
+//   } catch {
+//     return {
+//       success: false,
+//       message: "Failed to register. Please try again.",
+//     };
+//   }
+// };
+

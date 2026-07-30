@@ -1,6 +1,4 @@
 "use client";
-
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,9 +12,34 @@ import {
 } from "@/components/ui/card";
 
 import { Camera, ArrowRight } from "lucide-react";
-import { registerAction } from "../_action/authAction";
+import { registerAction } from "../_action/signUpAction";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
+const initialState = {
+  success: false,
+  message: "",
+};
 
 export default function RegisterForm() {
+const router = useRouter();
+  const [state, action, isPending] = useActionState(registerAction, initialState)
+  console.log(state, "ssss")
+  useEffect(() => {
+    if (!state) return;
+    if (state.success) {
+      toast.success(state.message);
+
+      setTimeout(() => {
+        router.replace("/login");
+      }, 1500);
+    }
+    if (!state.success) {
+      toast.error(state.message || "Login failed");
+    }
+  }, [state,router]);
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-950">
@@ -37,8 +60,8 @@ export default function RegisterForm() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-         
-          <form action={registerAction} className="space-y-4">
+
+          <form action={action} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>
               <Input
@@ -46,64 +69,62 @@ export default function RegisterForm() {
                 name="fullName"
                 placeholder="Alex Morgan"
                 required
-               
+
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="alex@example.com"
+                required
+
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="alex@example.com"
-                  required
-                
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="+1 (555) 000-0000"
-                  required
-               
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
+
                 <Input
                   id="password"
                   name="password"
                   type="password"
                   placeholder="••••••••"
                   required
-               
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
+
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
                   placeholder="••••••••"
                   required
-               
                 />
               </div>
             </div>
 
+            {state.message && (
+              <div
+                className={`rounded-md p-3 text-sm font-medium ${
+                  state.success
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
+                }`}
+              >
+                {state.message}
+              </div>
+            )}
+
             <Button type="submit" className="w-full gap-2">
-              Create Account <ArrowRight className="h-4 w-4" />
+              {isPending ? "Submitting..." : <>Create Account <ArrowRight className="h-4 w-4" /></>}
+
             </Button>
           </form>
         </CardContent>
