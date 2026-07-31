@@ -10,6 +10,6 @@ export const getGearItems = async()=>{
     }
    })
    const result = await res.json();
-   console.log(result,"func")
+//    console.log(result,"func")
    return result;
 }

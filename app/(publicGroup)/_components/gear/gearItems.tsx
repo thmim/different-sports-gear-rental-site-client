@@ -6,7 +6,7 @@ import GearGrid from "./gearGrid";
 export default async function GearItemPage() {
     const gears = await getGearItems();
    const gearsInfo = gears.data;
-    console.log(gears,"gearitempage")
+    // console.log(gears,"gearitempage")
   return (
     <div>
         <GearGrid items={gearsInfo}/>

@@ -82,7 +82,7 @@ export default function GearCardPage({ gear }: GearCardProps) {
       {/* Card Footer Action */}
       <CardFooter className="border-t border-slate-100 p-4 dark:border-slate-800">
         <Button asChild className="w-full gap-2">
-          <Link href={`/gear/${gear.id}`}>
+          <Link href={`/gears/${gear.id}`}>
             View Details
             <ArrowRight className="h-4 w-4" />
           </Link>
