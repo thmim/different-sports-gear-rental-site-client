@@ -1,80 +1,41 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { useActionState } from "react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { getCategoryDataAction } from "../../_actions/getCategoryFormData";
 
 export default function CreateCategoryPage() {
   const router = useRouter();
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   
-  // ফর্ম ডেটা স্টেট
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     description: "",
-//     image: "",
-//   });
+  const [state, formAction, isPending] = useActionState(
+    getCategoryDataAction,
+    {
+      success: false,
+      message: "",
+      errors: {},
+    }
+  );
 
-  // ইনপুট চেঞ্জ হ্যান্ডেলার
-//   const handleChange = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-//   ) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//     // এরর ক্লিয়ার করুন যখন ইউজার টাইপ করে
-//     if (error) setError(null);
-//   };
-
-  // ফর্ম সাবমিট
-//   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-//     e.preventDefault();
-    
-//     // বেসিক ভ্যালিডেশন (ক্লায়েন্ট সাইড)
-//     if (!formData.name.trim()) {
-//       setError("Category name is required");
-//       return;
-//     }
-//     if (!formData.description.trim()) {
-//       setError("Description is required");
-//       return;
-//     }
-
-//     try {
-//       setIsSubmitting(true);
-//       setError(null);
-
-//       const res = await fetch("/api/categories", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(formData),
-//       });
-
-//       if (!res.ok) {
-//         const errorData = await res.json();
-//         throw new Error(errorData.message || "Failed to create category");
-//       }
-
-//       // সফল হলে রিডাইরেক্ট
-//       router.push("/dashboard/categories");
-//       router.refresh();
-      
-//     } catch (err: any) {
-//       setError(err.message || "Something went wrong. Please try again.");
-//     } finally {
-//       setIsSubmitting(false);
-//     }
-//   }
+  // সাফল্য বা এরর মেসেজ দেখান
+  useEffect(() => {
+    if (state?.message) {
+      if (state.success) {
+        toast.success(state.message);
+        // সাফল্যের পর রিডাইরেক্ট
+        // setTimeout(() => {
+        //   router.push("/dashboard/categories");
+        //   router.refresh();
+        // }, 1000);
+      } else {
+        toast.error(state.message);
+      }
+    }
+  }, [state, router]);
 
   return (
     <div className="container max-w-2xl mx-auto py-10 px-4">
-      {/* হেডার */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Create New Category</h1>
         <p className="text-muted-foreground mt-2">
@@ -82,85 +43,90 @@ export default function CreateCategoryPage() {
         </p>
       </div>
 
-      {/* ফর্ম */}
-      <form className="space-y-6">
-        {/* এরর মেসেজ */}
-        {error && (
-          <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/50 dark:text-red-400">
-            {error}
-          </div>
-        )}
-
-        {/* Category Name - Required */}
+      <form action={formAction} className="space-y-6">
+        {/* Category Name */}
         <div>
           <label htmlFor="name" className="block text-sm font-medium mb-2">
             Category Name <span className="text-red-500">*</span>
           </label>
-          <Input
+          <input
+            type="text"
             id="name"
             name="name"
-            type="text"
+            className={`w-full border rounded px-3 py-2 ${
+              state?.errors?.name ? "border-red-500" : "border-gray-300"
+            }`}
             placeholder="e.g. Cameras & Lenses"
-            // value={formData.name}
-            // onChange={handleChange}
-            // disabled={isSubmitting}
-            className="w-full"
+            disabled={isPending}
+            // defaultValue={state?.data?.category_name || ""}
           />
+          {state?.errors?.name && (
+            <p className="text-red-500 text-sm mt-1">{state.errors.name}</p>
+          )}
         </div>
 
-        {/* Description - Required */}
+        {/* Description */}
         <div>
           <label htmlFor="description" className="block text-sm font-medium mb-2">
             Description <span className="text-red-500">*</span>
           </label>
-          <Textarea
+          <textarea
             id="description"
             name="description"
-            placeholder="Brief details about what fits into this category..."
-            // value={formData.description}
-            // onChange={handleChange}
-            // disabled={isSubmitting}
             rows={4}
-            className="resize-none w-full"
+            className={`w-full border rounded px-3 py-2 resize-none ${
+              state?.errors?.description ? "border-red-500" : "border-gray-300"
+            }`}
+            placeholder="Brief details about what fits into this category..."
+            disabled={isPending}
+            // defaultValue={state?.data?.description || ""}
           />
+          {state?.errors?.description && (
+            <p className="text-red-500 text-sm mt-1">{state.errors.description}</p>
+          )}
         </div>
 
         {/* Image URL - Optional */}
         <div>
           <label htmlFor="image" className="block text-sm font-medium mb-2">
-            Image URL <span className="text-muted-foreground text-sm">(Optional)</span>
+            Image URL <span className="text-gray-500 text-sm">(Optional)</span>
           </label>
-          <Input
+          <input
+            type="url"
             id="image"
             name="image"
-            type="url"
+            className={`w-full border rounded px-3 py-2 ${
+              state?.errors?.image ? "border-red-500" : "border-gray-300"
+            }`}
             placeholder="https://example.com/category-image.jpg"
-            // value={formData.image}
-            // onChange={handleChange}
-            // disabled={isSubmitting}
-            className="w-full"
+            disabled={isPending}
+            // defaultValue={state?.data?.image || ""}
           />
-          <p className="text-xs text-muted-foreground mt-1">
+          {state?.errors?.image && (
+            <p className="text-red-500 text-sm mt-1">{state.errors.image}</p>
+          )}
+          <p className="text-xs text-gray-500 mt-1">
             Enter a valid image URL for the category cover image.
           </p>
         </div>
 
-        {/* অ্যাকশন বাটন */}
+        {/* Buttons */}
         <div className="flex items-center gap-3 pt-4 border-t">
-          <Button
+          <button
             type="button"
-            variant="outline"
             onClick={() => router.back()}
-            // disabled={isSubmitting}
+            className="px-4 py-2 border rounded hover:bg-gray-50"
+            disabled={isPending}
           >
             Cancel
-          </Button>
-          <Button type="submit" 
-        //   disabled={isSubmitting}
-           className="flex-1 sm:flex-none">
-            {/* {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} */}
-            Create Category
-          </Button>
+          </button>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+          >
+            {isPending ? "Creating..." : "Create Category"}
+          </button>
         </div>
       </form>
     </div>
