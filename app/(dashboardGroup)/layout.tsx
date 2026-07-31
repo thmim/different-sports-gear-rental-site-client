@@ -7,16 +7,18 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const user = await getMe();
-    
+  const user = await getMe();
+
   return (
-    
-      <div className="min-h-full flex flex-col">
-       <Navbar user={user}/>
-       <DashboardSidebar user={user}/>
+
+    <div className="min-h-full flex flex-col">
+      <Navbar user={user} />
+      <div className="md:flex md:flex-1">
+        <DashboardSidebar user={user} />
         {children}
-       
-        </div>
-    
+      </div>
+
+    </div>
+
   );
 }

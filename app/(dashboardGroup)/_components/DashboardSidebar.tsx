@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { sidebarMenuItems } from "../_config/dashboardNavItems";
 
+
 // Nav Item Structure
 type NavItem = {
   title: string;
@@ -143,7 +144,8 @@ export default function DashboardSidebar({
 
               if (collapsed) {
                 return (
-                  <Tooltip key={item.href}>
+                  
+                    <Tooltip key={item.href}>
                     <TooltipTrigger asChild>
                       <Link
                         href={item.href}
@@ -158,8 +160,11 @@ export default function DashboardSidebar({
                     </TooltipTrigger>
                     <TooltipContent side="right">{item.title}</TooltipContent>
                   </Tooltip>
+                  
                 );
               }
+              
+              
 
               return (
                 <Link

@@ -1,4 +1,4 @@
-import { CalendarCheck, Heart, LayoutDashboard, ListOrdered, Package, PlusCircle, Settings, User } from "lucide-react";
+import { CalendarCheck, FolderPlus, Heart, LayoutDashboard, ListOrdered, Package, PlusCircle, Settings, User } from "lucide-react";
 
 const CUSTOMER_SIDEBAR_ITEMS = [
   {
@@ -8,22 +8,22 @@ const CUSTOMER_SIDEBAR_ITEMS = [
   },
   {
     title: "My Rentals",
-    href: "/dashboard/rentals",
+    href: "/customer-dashboard/rentals",
     icon: CalendarCheck,
   },
   {
     title: "Saved Gear",
-    href: "/dashboard/saved",
+    href: "/customer-dashboard/saved",
     icon: Heart,
   },
   {
     title: "Profile",
-    href: "/dashboard/profile",
+    href: "/customer-dashboard/profile",
     icon: User,
   },
   {
     title: "Settings",
-    href: "/dashboard/settings",
+    href: "/customer-dashboard/settings",
     icon: Settings,
   },
 ];
@@ -31,19 +31,19 @@ const CUSTOMER_SIDEBAR_ITEMS = [
 const PROVIDER_SIDEBAR_ITEMS = [
   {
     title: "Profile",
-    href: "/dashboard/profile",
+    href: "/provider-dashboard/profile",
     icon: User,
   },
 
   {
     title: "My Gears",
-    href: "/dashboard/listings",
+    href: "/provider-dashboard/listings",
     icon: Package,
 
   },
   {
     title: "My Rental Orders",
-    href: "/dashboard/listings/new",
+    href: "/provider-dashboard/listings/new",
     icon: ListOrdered,
 
   },
@@ -57,19 +57,19 @@ const ADMIN_SIDEBAR_ITEMS = [
   },
   {
     title: "Rentals",
-    href: "/dashboard/rentals",
+    href: "/admin-dashboard/rentals",
     icon: CalendarCheck,
   },
   {
     title: "Users",
-    href: "/dashboard/users",
+    href: "/admin-dashboard/users",
     icon: Package,
 
   },
   {
-    title: "Categories",
-    href: "/dashboard/categories",
-    icon: PlusCircle,
+    title: "Create-Categories",
+    href: "/admin-dashboard/categories",
+    icon: FolderPlus,
 
   },
 
