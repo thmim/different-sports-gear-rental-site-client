@@ -68,7 +68,7 @@ const USER_MENU_ITEMS: MenuItem[] = [
   { label: "Profile", href: "/profile", icon: User },
   { label: "My Rentals", href: "/my-rentals", icon: Package },
   { label: "My Listings", href: "/my-listings", icon: PlusCircle, roles: ["OWNER", "ADMIN"] },
-  { label: "Saved Gear", href: "/saved", icon: Heart },
+  { label: "Dashboard", href: "/customer-dashboard", icon: Heart },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

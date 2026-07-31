@@ -25,37 +25,11 @@ import {
 import { getGearDetails } from "../../_actions/getGearDetails";
 import { GearItemDetails } from "@/types/gearType";
 
-// Mock data structure matching your backend schema
-const MOCK_GEAR_DATA = {
-  id: "2b72294f-699c-4acf-9a94-41ef7ba58376",
-  provider_id: "42bba18f-573f-45f6-8c7a-cd1accce4da9",
-  category_id: "d9206419-8914-470d-b4dd-b8f0b9bf860c",
-  name: "Adidas Wind-proof Outdoor Boot",
-  product_image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&auto=format&fit=crop",
-  description:
-    "Designed for modern adventurers and field athletes, these boots feature high-durability traction soles, wind-resistant softshell lining, and lightweight shock absorption. Ideal for rugged outdoor terrain, soccer practice, and wet trail hiking.",
-  brand: "Adidas",
-  is_available: true,
-  condition: "FAIR" as const,
-  daily_price: "20",
-  quantity: 3,
-  created_at: "2026-07-11T10:38:41.567Z",
-  updated_at: "2026-07-11T10:39:23.866Z",
-  category: {
-    id: "d9206419-8914-470d-b4dd-b8f0b9bf860c",
-    category_name: "Soccer",
-    image: null,
-    description: "There are lots of soccer gadget here",
-    created_at: "2026-07-11T10:33:09.753Z",
-    updated_at: "2026-07-11T10:33:09.753Z",
-  },
-  provider: {
-    name: "John Doe Rentals",
-    rating: "4.9",
-    total_rentals: 42,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-  },
-};
+// Mock image for better ui. i will solve it
+// const MOCK_GEAR_DATA = {
+//   product_image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&auto=format&fit=crop",
+
+// };
 
 const CONDITION_STYLES: Record<string, string> = {
   NEW: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border-emerald-200",
@@ -74,11 +48,11 @@ export default function GearDetailsCard({gearData}:GearDetailsProps) {
   const avatar = "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
   // Rental state
   const [rentalDays, setRentalDays] = useState<number>(1);
-  const [selectedImage, setSelectedImage] = useState<string>(MOCK_GEAR_DATA.product_image);
+  const [selectedImage, setSelectedImage] = useState<string>(gearData.product_image);
 
   // Fallback gallery images (uses main image + placeholders for demo)
   const galleryImages = [
-    MOCK_GEAR_DATA.product_image,
+    gearData.product_image,
     "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=1000&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=1000&auto=format&fit=crop",
   ];

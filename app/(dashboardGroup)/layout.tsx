@@ -1,5 +1,6 @@
 import Navbar from "@/components/shared/navbar";
 import { getMe } from "@/services/getMe";
+import DashboardSidebar from "./_components/DashboardSidebar";
 
 export default async function DashboardLayout({
   children,
@@ -12,6 +13,7 @@ export default async function DashboardLayout({
     
       <div className="min-h-full flex flex-col">
        <Navbar user={user}/>
+       <DashboardSidebar user={user}/>
         {children}
        
         </div>
