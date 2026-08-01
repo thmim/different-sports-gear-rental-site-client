@@ -51,3 +51,25 @@ export interface GearItemDetails {
   category: GearCategory;
   provider:GearProvider
 }
+
+type ListingGear = {
+  id: string;
+  provider_id: string;
+  category_id: string;
+  name: string;
+  product_image: string;
+  description: string;
+  brand: string;
+  is_available: boolean;
+  condition: string;
+  daily_price: string;
+  quantity: number;
+  created_at: string;
+  updated_at: string;
+  category_name: string;
+}
+
+export type ListingGearProps = [
+  ListingGear
+]
+

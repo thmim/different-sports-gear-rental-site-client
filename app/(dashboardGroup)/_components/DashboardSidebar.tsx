@@ -29,6 +29,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { sidebarMenuItems } from "../_config/dashboardNavItems";
+import { NavbarProps } from "@/types/userType";
 
 
 // Nav Item Structure

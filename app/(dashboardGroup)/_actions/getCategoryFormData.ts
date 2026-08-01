@@ -1,4 +1,4 @@
-"use server"
+
 
 // import { revalidateTag } from "next/cache"
 // import { cookies } from "next/headers"
@@ -57,6 +57,7 @@
 
 "use server";
 
+// get category form data and call post api to create category
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -191,3 +192,36 @@ export const getCategoryDataAction = async (
         // };
     
 };
+
+
+// get all category
+export const getAllCategoryAction = async()=>{
+     const cookieStore = await cookies();
+    
+        const accessToken = cookieStore.get("accessToken")?.value || null;
+    
+        if(!accessToken){
+           
+            return {
+                success : false,
+                message : "User not logged in!"
+            }
+        }
+    
+    const res = await fetch(`${process.env.BACKEND_API_URL}/api/categories`, {
+            headers : {
+                Cookie : `accessToken=${accessToken}`
+            },
+    
+            cache : "force-cache",
+            next : {
+                revalidate : 60 * 60 * 24, // 1day
+                tags : ["categories"]
+            }
+        });
+    
+        const result = res.json();
+    
+    
+        return result;
+}

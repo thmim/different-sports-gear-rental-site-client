@@ -27,26 +27,27 @@ import {
 import { logout } from "@/services/logout";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { NavbarProps } from "@/types/userType";
 
 // user type
-type IUser = {
-   success: boolean,
-    statusCode: number,
-    message: string,
-    "data": {
-        "id": string,
-        "name": string,
-        "email": string,
-        "role": string,
-        "status": string,
-        "created_at": string,
-        "updated_at": string
-    }
-}
+// type IUser = {
+//    success: boolean,
+//     statusCode: number,
+//     message: string,
+//     "data": {
+//         "id": string,
+//         "name": string,
+//         "email": string,
+//         "role": string,
+//         "status": string,
+//         "created_at": string,
+//         "updated_at": string
+//     }
+// }
 // we take user as a props so that type will be a props
-type NavbarProps = {
-    user : IUser
-}
+// type NavbarProps = {
+//     user : IUser
+// }
 
 // interface for menu item
 interface MenuItem {

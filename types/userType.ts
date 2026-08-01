@@ -14,6 +14,6 @@ type IUser = {
     }
 }
 // we take user as a props so that type will be a props
-type NavbarProps = {
+export type NavbarProps = {
     user : IUser
 }
