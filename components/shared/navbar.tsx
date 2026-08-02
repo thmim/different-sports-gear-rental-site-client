@@ -73,30 +73,44 @@ const USER_MENU_ITEMS: MenuItem[] = [
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
-export default function Navbar({user}:NavbarProps) {
+export default function Navbar({ user }: NavbarProps) {
   const router = useRouter();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // console.log(user.data.name)
-// Dummy avatar url
+  // Dummy avatar url
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.data?.name}`;
-  
+
   // show user names first two letter if there is no image
   const initials = user?.data?.name.slice(0, 2).toUpperCase();
 
   // menu action functionality
-  const handleMenuAction = async(action:string)=>{
-     if(action === "logout"){
-       await logout();
-       toast.success("user logout successfully")
-     router.push("/login")
-     }
+  const handleMenuAction = async (action: string) => {
+    if (action === "dashboard") {
+      if (user.data.role === "CUSTOMER") {
+        router.push("/customer-dashboard")
+      }
+      else if (user.data.role === "PROVIDER") {
+        router.push("/provider-dashboard")
+      }
+      else if (user.data.role === "ADMIN") {
+        router.push("/admin-dashboard")
+      }
+
+      return;
+    }
+
+    if (action === "logout") {
+      await logout();
+      toast.success("user logout successfully")
+      router.push("/login")
+    }
   };
-  
-   return (
-   <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/85 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/85">
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/85 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/85">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        
+
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-slate-900 dark:text-slate-100">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white">
@@ -147,7 +161,7 @@ export default function Navbar({user}:NavbarProps) {
                     <p className="text-xs text-slate-500 truncate">{user.data.email}</p>
                   </div>
                 </DropdownMenuLabel>
-                
+
                 <DropdownMenuSeparator />
 
                 {/* Dynamically Rendered Menu Items */}
@@ -157,22 +171,24 @@ export default function Navbar({user}:NavbarProps) {
                   ).map((item) => {
                     const Icon = item.icon;
                     return (
-                      <DropdownMenuItem key={item.href} asChild>
-                        <Link href={item.href} className="cursor-pointer flex items-center">
+                      <DropdownMenuItem 
+                      onClick={async () => { await handleMenuAction(item.href) }}
+                      key={item.href}>
+                        {/* <Link href={item.href} className="cursor-pointer flex items-center"> */}
                           <Icon className="mr-2 h-4 w-4" />
                           <span>{item.label}</span>
-                        </Link>
+                        {/* </Link> */}
                       </DropdownMenuItem>
                     );
                   })}
                 </DropdownMenuGroup>
-              
+
 
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem
                   className="cursor-pointer text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/50"
-                  onClick={async()=>{await handleMenuAction("logout")}}
+                  onClick={async () => { await handleMenuAction("logout") }}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
@@ -247,13 +263,13 @@ export default function Navbar({user}:NavbarProps) {
                   </Link>
                 ))}
 
-               
+
 
                 <Button
                   variant="outline"
                   size="sm"
                   className="mt-2 w-full text-red-600"
-                  onClick={async()=>{await handleMenuAction("logout")}}
+                  onClick={async () => { await handleMenuAction("logout") }}
                 >
                   Log out
                 </Button>
