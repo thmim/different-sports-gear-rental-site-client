@@ -1,105 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { useState, useActionState } from "react";
+import { AlertCircle, Tag, Package, Pencil, Trash2, Plus } from "lucide-react";
+import CreateGearModal from "./CreateGearModal";
+import { GearCategory, GearItem } from "@/types/gearType";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import {
-  Pencil,
-  Trash2,
-  PlusCircle,
-  Tag,
-  Package,
-  AlertCircle,
-} from "lucide-react";
-import CreateGearModal, { GearFormData } from "./CreateGearModal";
-import { GearItem } from "@/types/gearType";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ActionState, deleteGearAction } from "../_actions/getProviderOwnGear";
 
-
-// Initial mock gear list
-const INITIAL_MY_GEAR = [
-  {
-    id: "g-101",
-    name: "Adidas Wind-proof Outdoor Boot",
-    brand: "Adidas",
-    category_id: "d9206419-8914-470d-b4dd-b8f0b9bf860c",
-    category_name: "Soccer",
-    daily_price: "20.00",
-    quantity: "3",
-    condition: "FAIR" as const,
-    product_image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop",
-    description: "Durable wind-proof boots suitable for trail running and sports.",
-  },
-  {
-    id: "g-102",
-    name: "Sony FX3 Full-Frame Cinema Camera",
-    brand: "Sony",
-    category_id: "c1016419-8914-470d-b4dd-b8f0b9bf860a",
-    category_name: "Photography & Video",
-    daily_price: "85.00",
-    quantity: "1",
-    condition: "EXCELLENT" as const,
-    product_image:
-      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop",
-    description: "Professional camera with XLR handle kit, ready for video shoots.",
-  },
-];
-
-const CONDITION_STYLES: Record<string, string> = {
-  NEW: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border-emerald-200",
-  LIKE_NEW: "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400 border-blue-200",
-  GOOD: "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 border-amber-200",
-  FAIR: "bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-400 border-orange-200",
-  POOR: "bg-red-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-400 border-orange-200",
-};
-
-interface GearCardProps {
-  gears: GearItem[]; 
+// interface GearListPageProps {
+//   gears: GearItem[];
+// }
+interface GearAndCategoryProps {
+  gears: GearItem[];
+  categories: GearCategory[];
 }
 
-export default function ProviderGearListPage({gears}:GearCardProps) {
-    // console.log(gears,"card")
-    // console.log(typeof(gears),"card")
-    // const geartype = Array.isArray(gears)
-    // console.log(geartype,"check")
-  const [gearList, setGearList] = useState(INITIAL_MY_GEAR);
-  const [selectedGearForEdit, setSelectedGearForEdit] =
-    useState<GearFormData | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const initialDeleteState: ActionState = { success: false, message: "" };
 
-  // Delete Handler
-  const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this gear listing?"
-    );
-    if (!confirmDelete) return;
+export default function ProviderGearListPage({ gears = [], categories = [] }: GearAndCategoryProps) {
+  // console.log(gears,"list")
+  const [selectedGearForEdit, setSelectedGearForEdit] = useState<GearItem | null>(null);
+  //   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    try {
-      // Optional API Call:
-      // await fetch(`/api/gear/${id}`, { method: 'DELETE' });
+  // Delete Action Hook
+  const [deleteState, deleteAction, isDeletePending] = useActionState(
+    deleteGearAction,
+    initialDeleteState
+  );
 
-      setGearList((prev) => prev.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error("Failed to delete gear:", err);
-    }
+  // Trigger Create
+  const handleOpenCreate = () => {
+    setSelectedGearForEdit(null); // Clear edit data
+    setIsModalOpen(true);
   };
 
-  // Edit Trigger Handler
-  const handleOpenEdit = (gears: GearItem) => {
-    // setSelectedGearForEdit({
-    //   id: gears.id,
-    //   name: gears.name,
-    //   brand: gears.brand,
-    //   category_id: gears.category_id,
-    //   daily_price: gears.daily_price,
-    //   quantity: gears.quantity,
-    //   condition: gears.condition,
-    //   product_image: gears.product_image,
-    //   description: gears.description,
-      
-    // });
-    // setIsEditModalOpen(true);
+  const handleOpenEdit = (gear: GearItem) => {
+    setSelectedGearForEdit(gear);
+    setIsModalOpen(true);
   };
 
   return (
@@ -115,27 +55,50 @@ export default function ProviderGearListPage({gears}:GearCardProps) {
           </p>
         </div>
 
-        {/* Create Gear Trigger */}
-        <CreateGearModal
-          onSuccess={() => {
-            // Re-fetch or update list logic here
-          }}
-        />
+        {/* Standard Button to Trigger Create */}
+        <Button onClick={handleOpenCreate} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add New Gear
+        </Button>
       </div>
 
-      {/* Edit Gear Modal Instance */}
-      <CreateGearModal
+      {/* single modal for create and edit */}
+      
+      {/* <CreateGearModal
         initialData={selectedGearForEdit}
-        isOpen={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
-        onSuccess={() => {
-          setIsEditModalOpen(false);
-          setSelectedGearForEdit(null);
-        }}
-      />
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        categories={categories}
+        onSuccess={() => setSelectedGearForEdit(null)}
+      /> */}
 
-      {/* Gear Grid */}
-      {gearList.length === 0 ? (
+      {isModalOpen && (
+  <CreateGearModal
+    initialData={selectedGearForEdit}
+    isOpen={isModalOpen}
+    onOpenChange={setIsModalOpen}
+    categories={categories}
+    onSuccess={() => {
+      setSelectedGearForEdit(null);
+      setIsModalOpen(false);
+    }}
+  />
+)}
+
+      {/* Feedback banner for Delete Operations */}
+      {deleteState.message && (
+        <div
+          className={`mb-6 p-4 rounded-lg text-sm ${deleteState.success
+              ? "bg-green-50 text-green-700 dark:bg-green-950/50 dark:text-green-300"
+              : "bg-red-50 text-red-700 dark:bg-red-950/50 dark:text-red-300"
+            }`}
+        >
+          {deleteState.message}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {gears.length === 0 ? (
         <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 p-8 text-center dark:border-slate-800">
           <AlertCircle className="h-10 w-10 text-slate-400" />
           <h3 className="mt-3 font-semibold text-slate-900 dark:text-slate-100">
@@ -145,12 +108,15 @@ export default function ProviderGearListPage({gears}:GearCardProps) {
             Get started by adding your first rental gear item.
           </p>
           <div className="mt-4">
-            <CreateGearModal />
+            <Button onClick={handleOpenCreate} variant="outline">
+              + Add New Gear
+            </Button>
           </div>
         </div>
       ) : (
+        /* Gear Grid */
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-         {gears.map((gear) => (
+          {gears.map((gear) => (
             <Card
               key={gear.id}
               className="flex flex-col overflow-hidden transition-all duration-200 hover:shadow-md dark:border-slate-800"
@@ -166,12 +132,7 @@ export default function ProviderGearListPage({gears}:GearCardProps) {
                         "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop";
                     }}
                   />
-                  <Badge
-                    variant="outline"
-                    className={`absolute right-3 top-3 border ${
-                      CONDITION_STYLES[gear.condition]
-                    }`}
-                  >
+                  <Badge variant="outline" className="absolute right-3 top-3">
                     {gear.condition}
                   </Badge>
                 </div>
@@ -182,7 +143,9 @@ export default function ProviderGearListPage({gears}:GearCardProps) {
                   <Tag className="h-3.5 w-3.5" />
                   <span>{gear.brand}</span>
                   <span>•</span>
-                  <span className="text-slate-500">{gear.category?.category_name}</span>
+                  <span className="text-slate-500">
+                    {gear.category?.category_name}
+                  </span>
                 </div>
 
                 <h3 className="line-clamp-1 font-bold text-slate-900 dark:text-slate-100">
@@ -217,14 +180,27 @@ export default function ProviderGearListPage({gears}:GearCardProps) {
                   <Pencil className="h-3.5 w-3.5" />
                   Edit
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/50"
-                  onClick={() => handleDelete(gear.id)}
+
+                {/* Server Action Form for Delete */}
+                <form
+                  action={deleteAction}
+                  onSubmit={(e) => {
+                    if (!confirm("Are you sure you want to delete this listing?")) {
+                      e.preventDefault();
+                    }
+                  }}
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
+                  <input type="hidden" name="id" value={gear.id} />
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    size="sm"
+                    disabled={isDeletePending}
+                    className="text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/50"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </form>
               </CardFooter>
             </Card>
           ))}

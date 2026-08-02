@@ -219,8 +219,14 @@ export const getAllCategoryAction = async()=>{
                 tags : ["categories"]
             }
         });
+        if (!res.ok) {
+      return {
+        success: false,
+        message: `Failed to fetch categories: ${res.status}`,
+      };
+    }
     
-        const result = res.json();
+        const result = await res.json();
     
     
         return result;

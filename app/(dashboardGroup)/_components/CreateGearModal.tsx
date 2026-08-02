@@ -1,331 +1,419 @@
+// "use client";
+
+// import { useActionState, useEffect } from "react";
+// import { GearCategory, GearItem } from "@/types/gearType";
+// import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+// import { Button } from "@/components/ui/button";
+// import { ActionState, upsertGearAction } from "../_actions/getProviderOwnGear";
+
+// interface CreateGearModalProps {
+//     initialData?: GearItem | null;
+//     categories?: GearCategory[] | null;
+//     isOpen?: boolean;
+//     onOpenChange?: (open: boolean) => void;
+//     onSuccess?: () => void;
+// }
+
+// const initialState: ActionState = {
+//     success: false,
+//     message: "",
+// };
+
+// export default function CreateGearModal({
+//     initialData,
+//     categories,
+//     isOpen,
+//     onOpenChange,
+//     onSuccess,
+// }: CreateGearModalProps) {
+//     // console.log(initialData, "initial")
+//     const [state, formAction, isPending] = useActionState(
+//         upsertGearAction,
+//         initialState
+//     );
+
+//     // Close modal on successful action execution
+//     useEffect(() => {
+//         if (state.success) {
+//             if (onSuccess) onSuccess();
+//             if (onOpenChange) onOpenChange(false);
+//         }
+//     }, [state.success, onSuccess, onOpenChange]);
+
+//     const isEditMode = Boolean(initialData?.id);
+
+//     return (
+//         <Dialog open={isOpen} onOpenChange={onOpenChange}>
+//             {/* <DialogTrigger asChild>
+//         {!isEditMode && <Button>+ Add New Gear</Button>}
+//       </DialogTrigger> */}
+
+//             <DialogContent className="sm:max-w-[550px]">
+//                 <DialogHeader>
+//                     <DialogTitle>
+//                         {isEditMode ? "Edit Gear Listing" : "Create Gear Listing"}
+//                     </DialogTitle>
+//                     <DialogDescription>
+//                         {isEditMode
+//                             ? "Update your rental item details."
+//                             : "Add new equipment to your rental inventory."}
+//                     </DialogDescription>
+//                 </DialogHeader>
+
+//                 <form action={formAction} className="space-y-4 py-2">
+//                     {/* Hidden ID input for Edit mode */}
+//                     {initialData?.id && (
+//                         <input type="hidden" name="id" value={initialData.id} />
+//                     )}
+
+//                     {/* Feedback message */}
+//                     {state.message && (
+//                         <div
+//                             className={`p-3 rounded-md text-sm ${state.success
+//                                     ? "bg-green-50 text-green-700 dark:bg-green-950/50 dark:text-green-300"
+//                                     : "bg-red-50 text-red-700 dark:bg-red-950/50 dark:text-red-300"
+//                                 }`}
+//                         >
+//                             {state.message}
+//                         </div>
+//                     )}
+
+//                     <div className="grid grid-cols-2 gap-4">
+//                         <div className="space-y-1">
+//                             <label className="text-xs font-semibold">Gear Name *</label>
+//                             <input
+//                                 type="text"
+//                                 name="name"
+//                                 defaultValue={initialData?.name || ""}
+//                                 required
+//                                 className="w-full rounded-md border p-2 text-sm"
+//                             />
+//                         </div>
+
+//                         <div className="space-y-1">
+//                             <label className="text-xs font-semibold">Brand *</label>
+//                             <input
+//                                 type="text"
+//                                 name="brand"
+//                                 defaultValue={initialData?.brand || ""}
+//                                 required
+//                                 className="w-full rounded-md border p-2 text-sm"
+//                             />
+//                         </div>
+//                     </div>
+
+//                     <div className="grid grid-cols-3 gap-4">
+//                         <div className="space-y-1">
+//                             <label htmlFor="category" className="text-xs font-semibold">
+//                                 Category Name *
+//                             </label>
+//                             <select
+//                                 id="category"
+//                                 name="category_name"
+//                                 defaultValue={initialData?.category.category_name }
+//                                 className="w-full rounded-md border p-2 text-sm bg-background focus:ring-2 focus:ring-blue-500"
+//                                 required
+//                             >
+//                                 <option value="">Select a category</option>
+//                                 {categories?.map((category) => (
+//                                     <option key={category.id} value={category.category_name}>
+//                                         {category.category_name}
+//                                     </option>
+//                                 ))}
+//                             </select>
+
+//                         </div>
+
+//                         <div className="space-y-1">
+//                             <label className="text-xs font-semibold">Daily Price ($) *</label>
+//                             <input
+//                                 type="number"
+//                                 name="daily_price"
+//                                 step="0.01"
+//                                 defaultValue={initialData?.daily_price || ""}
+//                                 required
+//                                 className="w-full rounded-md border p-2 text-sm"
+//                             />
+//                         </div>
+
+//                         <div className="space-y-1">
+//                             <label className="text-xs font-semibold">Quantity *</label>
+//                             <input
+//                                 type="number"
+//                                 name="quantity"
+//                                 defaultValue={initialData?.quantity ?? 1}
+//                                 required
+//                                 className="w-full rounded-md border p-2 text-sm"
+//                             />
+//                         </div>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                         <label className="text-xs font-semibold">Condition *</label>
+//                         <select
+//                             name="condition"
+//                             defaultValue={initialData?.condition || "NEW"}
+//                             className="w-full rounded-md border p-2 text-sm bg-background"
+//                         >
+//                             <option value="NEW">New</option>
+//                             <option value="LIKE_NEW">Like New</option>
+//                             <option value="GOOD">Good</option>
+//                             <option value="FAIR">Fair</option>
+//                             <option value="POOR">Poor</option>
+//                         </select>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                         <label className="text-xs font-semibold">Product Image URL</label>
+//                         <input
+//                             type="url"
+//                             name="product_image"
+//                             defaultValue={initialData?.product_image || ""}
+//                             placeholder="https://example.com/image.jpg"
+//                             className="w-full rounded-md border p-2 text-sm"
+//                         />
+//                     </div>
+
+//                     <div className="space-y-1">
+//                         <label className="text-xs font-semibold">Description</label>
+//                         <textarea
+//                             name="description"
+//                             rows={3}
+//                             defaultValue={initialData?.description || ""}
+//                             className="w-full rounded-md border p-2 text-sm"
+//                         />
+//                     </div>
+
+//                     <DialogFooter className="pt-2">
+//                         <Button
+//                             type="button"
+//                             variant="outline"
+//                             onClick={() => onOpenChange?.(false)}
+//                         >
+//                             Cancel
+//                         </Button>
+//                         <Button type="submit" disabled={isPending}>
+//                             {isPending
+//                                 ? "Saving..."
+//                                 : isEditMode
+//                                     ? "Save Changes"
+//                                     : "Create Gear"}
+//                         </Button>
+//                     </DialogFooter>
+//                 </form>
+//             </DialogContent>
+//         </Dialog>
+//     );
+// }
+
 "use client";
 
-import { useState, useEffect } from "react";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { useActionState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner"; // or your toast library
+import { GearCategory, GearItem } from "@/types/gearType";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-export interface GearFormData {
-  id?: string;
-  name: string;
-  brand: string;
-  category_id: string;
-  daily_price: string;
-  quantity: string;
-  condition: "NEW" | "EXCELLENT" | "GOOD" | "FAIR";
-  product_image: string;
-  description: string;
-}
+import { ActionState, upsertGearAction } from "../_actions/getProviderOwnGear";
 
 interface CreateGearModalProps {
-  initialData?: GearFormData | null;
+  initialData?: GearItem | null;
+  categories?: GearCategory[] | null;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   onSuccess?: () => void;
-  trigger?: React.ReactNode;
 }
 
-const CATEGORIES = [
-  { id: "d9206419-8914-470d-b4dd-b8f0b9bf860c", name: "Soccer" },
-  { id: "c1016419-8914-470d-b4dd-b8f0b9bf860a", name: "Photography & Video" },
-  { id: "a3026419-8914-470d-b4dd-b8f0b9bf860b", name: "Camping & Hiking" },
-  { id: "b4036419-8914-470d-b4dd-b8f0b9bf860c", name: "Water Sports" },
-];
+const initialState: ActionState = {
+  success: false,
+  message: "",
+};
 
 export default function CreateGearModal({
   initialData,
+  categories,
   isOpen,
   onOpenChange,
   onSuccess,
-  trigger,
 }: CreateGearModalProps) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
+  const [state, formAction, isPending] = useActionState(
+    upsertGearAction,
+    initialState
+  );
 
-  const activeOpen = isOpen !== undefined ? isOpen : open;
-  const setActiveOpen = onOpenChange || setOpen;
-
-  const [formData, setFormData] = useState<GearFormData>({
-    name: "",
-    brand: "",
-    category_id: "",
-    daily_price: "",
-    quantity: "1",
-    condition: "GOOD",
-    product_image: "",
-    description: "",
-  });
-
+  const isEditMode = Boolean(initialData?.id);
+  // Prevent toast from firing multiple times
+  const lastMessageRef = useRef<string | null>(null);
+  // Handle success / error
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
+    if (!state.message) return;
+
+    if (state.success) {
+      toast.success(state.message, {
+        duration: 3000, // 3 seconds
+      });
+
+      onOpenChange?.(false);
+      onSuccess?.();
+      
     } else {
-      setFormData({
-        name: "",
-        brand: "",
-        category_id: "",
-        daily_price: "",
-        quantity: "1",
-        condition: "GOOD",
-        product_image: "",
-        description: "",
+      toast.error(state.message, {
+        duration: 4000,
       });
     }
-  }, [initialData, activeOpen]);
+  }, [state, router, onSuccess, onOpenChange]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage("");
-
-    // Simple manual validation checks
-    if (!formData.name.trim()) {
-      setErrorMessage("Please enter a gear name.");
-      return;
-    }
-    if (!formData.brand.trim()) {
-      setErrorMessage("Please enter a brand.");
-      return;
-    }
-    if (!formData.category_id) {
-      setErrorMessage("Please select a category.");
-      return;
-    }
-    if (!formData.daily_price || Number(formData.daily_price) <= 0) {
-      setErrorMessage("Please enter a valid daily price greater than 0.");
-      return;
-    }
-    if (!formData.quantity || Number(formData.quantity) < 1) {
-      setErrorMessage("Quantity must be at least 1.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      const endpoint = initialData?.id
-        ? `/api/gear/${initialData.id}`
-        : "/api/gear";
-      const method = initialData?.id ? "PATCH" : "POST";
-
-      const res = await fetch(endpoint, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Failed to save gear.");
-      }
-
-      setActiveOpen(false);
-      if (onSuccess) onSuccess();
-    } catch (err: any) {
-      setErrorMessage(err.message || "Something went wrong.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   return (
-    <Dialog open={activeOpen} onOpenChange={setActiveOpen}>
-      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      {!trigger && isOpen === undefined && (
-        <DialogTrigger asChild>
-          <Button className="gap-2">
-            <PlusCircle className="h-4 w-4" />
-            Add New Gear
-          </Button>
-        </DialogTrigger>
-      )}
-
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[550px]">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
           <DialogTitle>
-            {initialData?.id ? "Edit Gear Details" : "Create New Gear Listing"}
+            {isEditMode ? "Edit Gear Listing" : "Create Gear Listing"}
           </DialogTitle>
+          <DialogDescription>
+            {isEditMode
+              ? "Update your rental item details."
+              : "Add new equipment to your rental inventory."}
+          </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
-          {errorMessage && (
-            <div className="rounded-md bg-red-50 p-3 text-xs font-medium text-red-600 dark:bg-red-950/50 dark:text-red-400">
-              {errorMessage}
-            </div>
+        <form action={formAction} className="space-y-4 py-2">
+          {initialData?.id && (
+            <input type="hidden" name="id" value={initialData.id} />
           )}
 
-          {/* Gear Name */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Gear Title *
-            </label>
-            <Input
-              name="name"
-              placeholder="e.g. Sony Alpha A7 III Camera"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold">Gear Name *</label>
+              <input
+                type="text"
+                name="name"
+                defaultValue={initialData?.name || ""}
+                required
+                className="w-full rounded-md border p-2 text-sm"
+              />
+            </div>
 
-          {/* Brand & Category */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Brand *
-              </label>
-              <Input
+            <div className="space-y-1">
+              <label className="text-xs font-semibold">Brand *</label>
+              <input
+                type="text"
                 name="brand"
-                placeholder="e.g. Sony"
-                value={formData.brand}
-                onChange={handleChange}
+                defaultValue={initialData?.brand || ""}
                 required
+                className="w-full rounded-md border p-2 text-sm"
               />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Category *
-              </label>
-              <Select
-                value={formData.category_id}
-                onValueChange={(val) =>
-                  setFormData((prev) => ({ ...prev, category_id: val }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
-          {/* Daily Price, Quantity & Condition */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Daily Price ($) *
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <label htmlFor="category" className="text-xs font-semibold">
+                Category Name *
               </label>
-              <Input
+              <select
+                id="category"
+                name="category_name"
+                defaultValue={initialData?.category?.category_name || ""}
+                className="w-full rounded-md border p-2 text-sm bg-background"
+                required
+              >
+                <option value="">Select a category</option>
+                {categories?.map((category) => (
+                  <option key={category.id} value={category.category_name}>
+                    {category.category_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-semibold">Daily Price ($) *</label>
+              <input
+                type="number"
                 name="daily_price"
-                type="number"
-                min="1"
                 step="0.01"
-                placeholder="25.00"
-                value={formData.daily_price}
-                onChange={handleChange}
+                defaultValue={initialData?.daily_price || ""}
                 required
+                className="w-full rounded-md border p-2 text-sm"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Quantity *
-              </label>
-              <Input
-                name="quantity"
+            <div className="space-y-1">
+              <label className="text-xs font-semibold">Quantity *</label>
+              <input
                 type="number"
-                min="1"
-                placeholder="1"
-                value={formData.quantity}
-                onChange={handleChange}
+                name="quantity"
+                defaultValue={initialData?.quantity ?? 1}
                 required
+                className="w-full rounded-md border p-2 text-sm"
               />
             </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Condition
-              </label>
-              <Select
-                value={formData.condition}
-                onValueChange={(val: any) =>
-                  setFormData((prev) => ({ ...prev, condition: val }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="NEW">New</SelectItem>
-                  <SelectItem value="EXCELLENT">Excellent</SelectItem>
-                  <SelectItem value="GOOD">Good</SelectItem>
-                  <SelectItem value="FAIR">Fair</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
 
-          {/* Image URL */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Product Image URL
-            </label>
-            <Input
+          <div className="space-y-1">
+            <label className="text-xs font-semibold">Condition *</label>
+            <select
+              name="condition"
+              defaultValue={initialData?.condition || "NEW"}
+              className="w-full rounded-md border p-2 text-sm bg-background"
+            >
+              <option value="NEW">New</option>
+              <option value="LIKE_NEW">Like New</option>
+              <option value="GOOD">Good</option>
+              <option value="FAIR">Fair</option>
+              <option value="POOR">Poor</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-semibold">Product Image URL</label>
+           
+            <input
+              type="url"
               name="product_image"
-              placeholder="https://images.unsplash.com/..."
-              value={formData.product_image}
-              onChange={handleChange}
+              defaultValue={initialData?.product_image || ""}
+              placeholder="https://example.com/image.jpg"
+              className="w-full rounded-md border p-2 text-sm"
             />
           </div>
 
-          {/* Description */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Description
-            </label>
-            <Textarea
+          <div className="space-y-1">
+            <label className="text-xs font-semibold">Description</label>
+            <textarea
               name="description"
-              placeholder="Provide key specs, accessories included, and usage guidelines..."
               rows={3}
-              value={formData.description}
-              onChange={handleChange}
+              defaultValue={initialData?.description || ""}
+              className="w-full rounded-md border p-2 text-sm"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-3">
+          <DialogFooter className="pt-2">
             <Button
               type="button"
               variant="outline"
-              onClick={() => setActiveOpen(false)}
-              disabled={loading}
+              onClick={() => onOpenChange?.(false)}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {initialData?.id ? "Update Gear" : "Publish Listing"}
+            <Button type="submit" disabled={isPending}>
+              {isPending
+                ? "Saving..."
+                : isEditMode
+                  ? "Save Changes"
+                  : "Create Gear"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

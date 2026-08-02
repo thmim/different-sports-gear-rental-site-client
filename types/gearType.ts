@@ -9,12 +9,12 @@ export interface GearCategory {
 
 export interface GearProvider {
   id: string,
-      name: string,
-      email: string,
-      role: string,
-      status: string,
-      created_at: string,
-      updated_at: string
+  name: string,
+  email: string,
+  role: string,
+  status: string,
+  created_at: string,
+  updated_at: string
 }
 
 export interface GearItem {
@@ -49,7 +49,7 @@ export interface GearItemDetails {
   created_at: string;
   updated_at: string;
   category: GearCategory;
-  provider:GearProvider
+  provider: GearProvider
 }
 
 type ListingGear = {
