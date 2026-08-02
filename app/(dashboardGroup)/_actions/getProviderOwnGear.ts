@@ -133,6 +133,18 @@ export async function deleteGearAction(
     prevState: ActionState,
     formData: FormData
 ): Promise<ActionState> {
+  const cookieStore = await cookies();
+
+    const accessToken = cookieStore.get("accessToken")?.value || null;
+
+    if (!accessToken) {
+
+        return {
+            success: false,
+            message: "User not logged in!"
+        }
+    }
+
     try {
         const id = formData.get("id") as string;
 
@@ -140,11 +152,31 @@ export async function deleteGearAction(
             return { success: false, message: "Gear ID is required for deletion." };
         }
 
-        // TODO: Perform DB DELETE logic here
-        // await db.gear.delete({ where: { id } });
-        console.log("Deleting gear:", id);
+        // delete gear
+    const res = await fetch(`${process.env.BACKEND_API_URL}/api/provider/gear/${id}`, {
+      method:"DELETE",
+        headers: {
+            Cookie: `accessToken=${accessToken}`
+        },
 
-        revalidatePath("/provider/gear");
+        cache: "no-store",
+        
+    });
+    if (!res.ok) {
+        return {
+            success: false,
+            message: `Failed to fetch gears: ${res.status}`,
+        };
+    }
+
+    const result = await res.json();
+    revalidateTag("all-gears",{
+            expire : 0
+        });
+    revalidateTag("single-gear",{
+            expire : 0
+        });
+    // console.log(result,"result")
 
         return { success: true, message: "Gear deleted successfully." };
     } catch (error) {
@@ -154,5 +186,6 @@ export async function deleteGearAction(
             message: "Could not delete gear. Try again.",
         };
     }
+    
 }
 

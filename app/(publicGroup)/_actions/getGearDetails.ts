@@ -7,7 +7,7 @@ export const getGearDetails = async(id:string)=>{
     cache:"force-cache",
     next:{
         revalidate: 60 * 60 ,
-        tags:["all-gear"]
+        tags:["single-gear"]
     }
    })
    const result = await res.json();

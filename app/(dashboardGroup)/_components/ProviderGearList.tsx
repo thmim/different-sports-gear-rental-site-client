@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState, useActionState, useEffect } from "react";
 import { AlertCircle, Tag, Package, Pencil, Trash2, Plus } from "lucide-react";
 import CreateGearModal from "./CreateGearModal";
 import { GearCategory, GearItem } from "@/types/gearType";
@@ -8,6 +8,8 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ActionState, deleteGearAction } from "../_actions/getProviderOwnGear";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // interface GearListPageProps {
 //   gears: GearItem[];
@@ -24,7 +26,7 @@ export default function ProviderGearListPage({ gears = [], categories = [] }: Ge
   const [selectedGearForEdit, setSelectedGearForEdit] = useState<GearItem | null>(null);
   //   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+const router = useRouter();
   // Delete Action Hook
   const [deleteState, deleteAction, isDeletePending] = useActionState(
     deleteGearAction,
@@ -41,6 +43,17 @@ export default function ProviderGearListPage({ gears = [], categories = [] }: Ge
     setSelectedGearForEdit(gear);
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+  if (!deleteState.message) return;
+
+  if (deleteState.success) {
+    toast.success(deleteState.message);
+    router.refresh();
+  } else {
+    toast.error(deleteState.message);
+  }
+}, [deleteState.message, deleteState.success,router]);
 
   return (
     <div className="p-6 md:p-8">
@@ -86,7 +99,7 @@ export default function ProviderGearListPage({ gears = [], categories = [] }: Ge
 )}
 
       {/* Feedback banner for Delete Operations */}
-      {deleteState.message && (
+      {/* {deleteState.message && (
         <div
           className={`mb-6 p-4 rounded-lg text-sm ${deleteState.success
               ? "bg-green-50 text-green-700 dark:bg-green-950/50 dark:text-green-300"
@@ -95,7 +108,7 @@ export default function ProviderGearListPage({ gears = [], categories = [] }: Ge
         >
           {deleteState.message}
         </div>
-      )}
+      )} */}
 
       {/* Empty State */}
       {gears.length === 0 ? (
