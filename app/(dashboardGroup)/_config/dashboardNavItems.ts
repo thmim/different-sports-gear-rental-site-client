@@ -62,7 +62,7 @@ const ADMIN_SIDEBAR_ITEMS = [
   },
   {
     title: "Users",
-    href: "/admin-dashboard/users",
+    href: "/admin-dashboard/all-users",
     icon: Package,
 
   },
