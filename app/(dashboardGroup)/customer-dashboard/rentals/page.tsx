@@ -3,7 +3,7 @@ import CustomerRentalsList from "../../_components/CustomerPaidRentalList";
 
 export default async function MyRentalsPage() {
 const confirmedOrders = await getPaidRentalOrderAction();
-console.log(confirmedOrders,"rentalPage")
+
   return (
     <div className="mx-auto my-16">
       <CustomerRentalsList orders={confirmedOrders.data}/>

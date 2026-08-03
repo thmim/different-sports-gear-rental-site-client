@@ -51,13 +51,7 @@ export async function createRentalOrderAction(
       };
     }
 
-    console.log("Creating order:", {
-      gearItem_id,
-      start_date,
-      end_date,
-      totalDays,
-      totalPrice,
-    });
+   
 
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/rentals`, {
       method: "POST",
@@ -69,7 +63,7 @@ export async function createRentalOrderAction(
     });
 
     const result = await res.json();
-    console.log(result, "payresult");
+    
 
     if (result.success && result.data?.paymentUrl) {
       return {

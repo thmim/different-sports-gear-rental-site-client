@@ -15,7 +15,7 @@ type loginState = {
 }
 
 export const loginAction = async (redirectTo :string,previousState: loginState, formData: FormData) => {
-  // console.log(previousState,"prev")
+  
 
   const email = formData.get("email")
   const password = formData.get("password")
@@ -52,7 +52,7 @@ export const loginAction = async (redirectTo :string,previousState: loginState, 
     })
 
     const decoded = jwt.decode(result.data.accessToken) as JwtPayload;
-console.log(redirectTo && typeof redirectTo === "string" && !redirectTo.startsWith("//"),"boolean")
+
    if(redirectTo && typeof redirectTo === "string" && redirectTo.startsWith("/") && !redirectTo.startsWith("//")){
             redirect(redirectTo)
         }

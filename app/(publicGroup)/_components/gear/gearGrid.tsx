@@ -9,7 +9,7 @@ interface GearGridProps {
 }
 
 export default function GearGrid({ items }: GearGridProps) {
-    console.log(items,"grid theke")
+   
   if (!items || items.length === 0) {
     return (
       <div className="flex min-h-[250px] flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 p-8 text-center dark:border-slate-800">

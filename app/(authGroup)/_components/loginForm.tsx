@@ -14,15 +14,9 @@ export default function LoginForm() {
 
   const redirectTo = searchParams.get("redirectTo") ?? ""
   const [state,action,isPending] = useActionState(loginAction.bind(null,redirectTo),false)
-console.log(state,"ssss")
+
   useEffect(()=>{
      if(!state) return;
-
-        // if(state.success){
-        //     toast.success(state.message || "Login Successful");
-            
-        // }
-        // router.push("/dashboard") redirect another page
   
         if(!state.success){
             toast.error(state.message || "Login failed");

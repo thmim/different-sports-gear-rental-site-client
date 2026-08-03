@@ -37,13 +37,7 @@ export default async function OrderDetailsPage({
 }:{
   order: ProviderOrder;
 }) {
-console.log(order,"det")
-//   const formatDate = (dateString: string) =>
-//     new Date(dateString).toLocaleDateString("en-US", {
-//       month: "short",
-//       day: "numeric",
-//       year: "numeric",
-//     });
+
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">

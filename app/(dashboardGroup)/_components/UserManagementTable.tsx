@@ -46,15 +46,15 @@ export default function UserManagementTable({
   setSelectedUser(null);
 };
 
-  // Toast + Refresh
+  // toast and refresh
   useEffect(() => {
     if (!state.message || state.message === lastMessageRef.current) return;
 
     lastMessageRef.current = state.message;
-console.log("Action State:", state);
+
     if (state.success) {
       toast.success(state.message, { duration: 3000 });
-      router.refresh(); // ← টেবিল আপডেট হবে
+      router.refresh(); 
      setTimeout(() => {
       handleClose();
     }, 500);
@@ -63,7 +63,7 @@ console.log("Action State:", state);
     }
   }, [state, router]);
 
-  // মডাল বন্ধ হলে ref রিসেট
+  
   useEffect(() => {
     if (!isModalOpen) {
       lastMessageRef.current = null;

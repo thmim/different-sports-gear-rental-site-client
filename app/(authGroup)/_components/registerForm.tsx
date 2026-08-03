@@ -25,7 +25,7 @@ const initialState = {
 export default function RegisterForm() {
 const router = useRouter();
   const [state, action, isPending] = useActionState(registerAction, initialState)
-  console.log(state, "ssss")
+  
   useEffect(() => {
     if (!state) return;
     if (state.success) {

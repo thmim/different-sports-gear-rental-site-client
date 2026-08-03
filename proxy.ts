@@ -17,13 +17,11 @@ export async function proxy(request: NextRequest) {
     let decodedAccessToken = accessToken ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string) : null;
 
     const decodedRefreshToken = refreshToken ? jwtUtils.verifyToken(refreshToken, process.env.JWT_REFRESH_SECRET as string) : null;
-    console.log(decodedRefreshToken);
+    
     if (!decodedAccessToken?.success && decodedRefreshToken?.success) {
         //access token has expired but refresh token is valid, get new access token from backend
-        console.log("Refreshing access token...");
+        
         const result = await getNewAccessToken();
-        console.log(result, "get-new");
-        // console.log(result.data,"new");
 
 
         if (result.success) {

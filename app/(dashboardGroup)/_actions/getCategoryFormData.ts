@@ -1,60 +1,5 @@
 
 
-// import { revalidateTag } from "next/cache"
-// import { cookies } from "next/headers"
-// import { redirect } from "next/navigation"
-// import { toast } from "sonner"
-
-// type categoryState = {
-//   success:boolean,
-//   statusCode:number,
-//   message:string,
-//   data:Record<string,number>
-// }
-
-// export const getCategoryDataAction = async (previousState:categoryState,formData:FormData) =>{
-//     // console.log(previousState,"prev")
-//     console.log(formData,"cat action")
-// const category_name = formData.get("name");
-// const description = formData.get("description");
-// const image = formData.get("image") || null;
-//  const cookieStore = await cookies();
-
-//    const accessToken = cookieStore.get("accessToken")?.value;
-
-//    if(!accessToken){
-//     return{
-//         success:false,
-//         message:"user not logedin"
-//     }
-//    }
-
-//    const payload = {
-//          category_name,
-//          description,
-//          image
-//    }
-
-// const res = await fetch(`${process.env.BACKEND_API_URL}/api/categories`,{
-//     method:"POST",
-//     headers:{
-//         Cookie:`accessToken = ${accessToken}`,
-//         "Content-Type": "application/json"
-//     },
-//     body:JSON.stringify(payload)
-// })
-// const result = await res.json();
-// console.log(result)
-
-// if(result.success){
-//      revalidateTag("categories", {
-//             expire : 0
-//         })
-//   toast.success("Category created Successfully")
-//   }
-//  return result;
-// }
-
 "use server";
 
 import { isAccessTokenExist } from "@/services/refreshToken";
@@ -148,7 +93,7 @@ export const getCategoryDataAction = async (
         });
 
         const result = await res.json();
-        console.log(result);
+        
 
       
         if (result.success) {

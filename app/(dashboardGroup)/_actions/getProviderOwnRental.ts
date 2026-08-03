@@ -30,7 +30,7 @@ export const providerOwnRentalGetAction = async () => {
 export const providerOwnRentalDetailsAction = async (id: string) => {
     const accessToken = await isAccessTokenExist()
 
-    console.log(id, "rentaldetailsfunc")
+    
 
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/rentals/${id}`, {
         headers: {

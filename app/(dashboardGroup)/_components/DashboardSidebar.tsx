@@ -83,7 +83,7 @@ export default function DashboardSidebar({
 
   return (
     <TooltipProvider delayDuration={0}>
-      {/* ================= DESKTOP SIDEBAR ================= */}
+      {/* desktop sidebar */}
       <aside
         className={`hidden border-r border-slate-200 bg-white transition-all duration-300 dark:border-slate-800 dark:bg-slate-950 md:flex md:flex-col ${
           collapsed ? "w-20" : "w-64"
@@ -223,7 +223,7 @@ export default function DashboardSidebar({
         </div>
       </aside>
 
-      {/* ================= MOBILE SIDEBAR (TRIGGER & SHEET) ================= */}
+      {/*mobile sidebar */}
       <div className="flex items-center border-b border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950 md:hidden">
         <Sheet>
           <SheetTrigger asChild>

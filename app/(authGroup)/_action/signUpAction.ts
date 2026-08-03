@@ -7,14 +7,13 @@ type RegisterState = {
 
 export const registerAction = async (previousState:RegisterState,formData: FormData) => {
 
-  console.log(formData)
   const name = formData.get("fullName");
   const email = formData.get("email");
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
 
   if (password !== confirmPassword) {
-    console.log("not matched")
+   
     return {
       success: false,
       message: "Passwords do not match",
@@ -40,8 +39,6 @@ export const registerAction = async (previousState:RegisterState,formData: FormD
     );
 
     const result = await res.json();
-console.log(result,"fetch result")
-console.log(result.success,"fetch result")
     if (result.success) {
          return {
     success: true,
