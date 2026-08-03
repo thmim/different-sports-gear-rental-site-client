@@ -43,7 +43,7 @@ const PROVIDER_SIDEBAR_ITEMS = [
   },
   {
     title: "My Rental Orders",
-    href: "/provider-dashboard/listings/new",
+    href: "/provider-dashboard/own-order",
     icon: ListOrdered,
 
   },
