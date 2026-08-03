@@ -185,6 +185,9 @@ export async function createRentalOrderAction(
     revalidateTag("all-gear", {
           expire: 0
         });
+    revalidateTag("all-rentals", {
+          expire: 0
+        });
 
     return {
       success: result.success || false,

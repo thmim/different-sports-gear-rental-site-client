@@ -57,7 +57,7 @@ const ADMIN_SIDEBAR_ITEMS = [
   },
   {
     title: "Rentals",
-    href: "/admin-dashboard/rentals",
+    href: "/admin-dashboard/order",
     icon: CalendarCheck,
   },
   {
