@@ -14,7 +14,7 @@ type loginState = {
   }
 }
 
-export const loginAction = async (previousState: loginState, formData: FormData) => {
+export const loginAction = async (redirectTo :string,previousState: loginState, formData: FormData) => {
   // console.log(previousState,"prev")
 
   const email = formData.get("email")
@@ -52,6 +52,10 @@ export const loginAction = async (previousState: loginState, formData: FormData)
     })
 
     const decoded = jwt.decode(result.data.accessToken) as JwtPayload;
+console.log(redirectTo && typeof redirectTo === "string" && !redirectTo.startsWith("//"),"boolean")
+   if(redirectTo && typeof redirectTo === "string" && redirectTo.startsWith("/") && !redirectTo.startsWith("//")){
+            redirect(redirectTo)
+        }
     
     if (decoded.role === "CUSTOMER") {
       redirect("/customer-dashboard", "push");

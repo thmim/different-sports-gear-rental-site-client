@@ -1,20 +1,10 @@
 "use server"
 
+import { isAccessTokenExist } from "@/services/refreshToken";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export const getProviderListingGear = async () => {
-    const cookieStore = await cookies();
-
-    const accessToken = cookieStore.get("accessToken")?.value || null;
-
-    if (!accessToken) {
-
-        return {
-            success: false,
-            message: "User not logged in!"
-        }
-    }
+    const accessToken = await isAccessTokenExist()
 
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/own/gear-list`, {
         headers: {
@@ -52,15 +42,7 @@ export async function upsertGearAction(
   prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value || null;
-
-  if (!accessToken) {
-    return {
-      success: false,
-      message: "User not logged in!",
-    };
-  }
+  const accessToken = await isAccessTokenExist()
 
   try {
     const id = formData.get("id") as string;
@@ -133,17 +115,7 @@ export async function deleteGearAction(
     prevState: ActionState,
     formData: FormData
 ): Promise<ActionState> {
-  const cookieStore = await cookies();
-
-    const accessToken = cookieStore.get("accessToken")?.value || null;
-
-    if (!accessToken) {
-
-        return {
-            success: false,
-            message: "User not logged in!"
-        }
-    }
+  const accessToken = await isAccessTokenExist()
 
     try {
         const id = formData.get("id") as string;

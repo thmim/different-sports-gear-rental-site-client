@@ -7,9 +7,13 @@ import { Label } from "@/components/ui/label";
 import { loginAction } from "../_action/authAction";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
-  const [state,action,isPending] = useActionState(loginAction,false)
+  const searchParams = useSearchParams();
+
+  const redirectTo = searchParams.get("redirectTo") ?? ""
+  const [state,action,isPending] = useActionState(loginAction.bind(null,redirectTo),false)
 console.log(state,"ssss")
   useEffect(()=>{
      if(!state) return;

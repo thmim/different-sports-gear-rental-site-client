@@ -1,20 +1,13 @@
 "use server";
 
+import { isAccessTokenExist } from "@/services/refreshToken";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
+
 
 // get all paid rental order
 export const getPaidRentalOrderAction = async()=>{
-    const cookieStore = await cookies();
     
-      const accessToken = cookieStore.get("accessToken")?.value;
-    
-      if (!accessToken) {
-        return {
-          success: false,
-          message: "user not logedin"
-        }
-      }
+      const accessToken = await isAccessTokenExist()
     
       //    get all rental order and provide token to the browser cookies through headers
       const res = await fetch(`${process.env.BACKEND_API_URL}/api/customer/confirmed/rental`, {
@@ -41,12 +34,7 @@ export async function createReviewAction(payload: {
   comment: string;
   rating: number;
 }) {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
-
-  if (!accessToken) {
-    return { success: false, message: "Unauthorized. Please log in." };
-  }
+  const accessToken = await isAccessTokenExist()
 
   try {
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/reviews`, {

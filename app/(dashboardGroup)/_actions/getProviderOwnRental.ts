@@ -1,16 +1,11 @@
 "use server"
 
+import { isAccessTokenExist } from "@/services/refreshToken";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export const providerOwnRentalGetAction = async () => {
 
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value || null;
-
-    if (!accessToken) {
-        return { success: false, message: "Unauthorized. Please log in." };
-    }
+    const accessToken = await isAccessTokenExist()
 
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/provider/own/orders`, {
         headers: {
@@ -33,12 +28,7 @@ export const providerOwnRentalGetAction = async () => {
 // get provider own gear details
 
 export const providerOwnRentalDetailsAction = async (id: string) => {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value || null;
-
-    if (!accessToken) {
-        return { success: false, message: "Unauthorized. Please log in." };
-    }
+    const accessToken = await isAccessTokenExist()
 
     console.log(id, "rentaldetailsfunc")
 
@@ -64,12 +54,7 @@ export const providerOwnRentalDetailsAction = async (id: string) => {
 // update rental order status
 
 export async function updateOrderStatusAction(orderId: string, newStatus: string) {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value || null;
-
-    if (!accessToken) {
-        return { success: false, message: "Unauthorized. Please log in." };
-    }
+    const accessToken = await isAccessTokenExist()
 
     try {
         const res = await fetch(`${process.env.BACKEND_API_URL}/api/rentals/${orderId}/status`, {

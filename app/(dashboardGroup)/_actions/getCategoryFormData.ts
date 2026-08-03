@@ -57,6 +57,7 @@
 
 "use server";
 
+import { isAccessTokenExist } from "@/services/refreshToken";
 // get category form data and call post api to create category
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -88,14 +89,11 @@ export const getCategoryDataAction = async (
     previousState: CategoryState,
     formData: FormData
 ): Promise<CategoryState> => {
-    //   console.log(formData, "cat action");
-
-    // ১. ডেটা এক্সট্র্যাক্ট
+    
     const category_name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const image = formData.get("image") as string | null;
 
-    // ২. বেসিক ভ্যালিডেশন
     const errors: { name?: string; description?: string; image?: string } = {};
 
     if (!category_name || category_name.trim().length === 0) {
@@ -114,16 +112,15 @@ export const getCategoryDataAction = async (
         errors.description = "Description must not exceed 500 characters";
     }
 
-    // ইমেজ ভ্যালিডেশন (অপশনাল)
+    
     if (image && image.trim().length > 0) {
         try {
-            new URL(image); // ইউআরএল চেক
+            new URL(image); 
         } catch {
             errors.image = "Please enter a valid image URL";
         }
     }
 
-    // যদি ভ্যালিডেশন ফেইল হয়
     if (Object.keys(errors).length > 0) {
         return {
             success: false,
@@ -132,18 +129,8 @@ export const getCategoryDataAction = async (
         };
     }
 
-    // ৩. টোকেন চেক
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value;
+    const accessToken = await isAccessTokenExist()
 
-    if (!accessToken) {
-        return {
-            success: false,
-            message: "User not logged in",
-        };
-    }
-
-    // ৪. পেলোড তৈরি
     const payload = {
         category_name: category_name.trim(),
         description: description.trim(),
@@ -163,13 +150,11 @@ export const getCategoryDataAction = async (
         const result = await res.json();
         console.log(result);
 
-        // ৬. সাফল্য হ্যান্ডেলিং
+      
         if (result.success) {
             revalidateTag("categories", {
                 expire: 0
             });
-            // রিডাইরেক্ট করতে চাইলে
-            // redirect("/dashboard/categories");
 
             return {
                 success: true,
@@ -184,11 +169,6 @@ export const getCategoryDataAction = async (
             };
         }
     
-        // console.error("Category creation error:", error);
-        // return {
-        //     success: false,
-        //     message: error.message || "Something went wrong",
-        // };
     
 };
 
