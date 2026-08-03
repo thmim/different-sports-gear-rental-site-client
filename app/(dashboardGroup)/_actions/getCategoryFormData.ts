@@ -150,7 +150,6 @@ export const getCategoryDataAction = async (
         image: image?.trim() || null,
     };
 
-    // ৫. API কল
     
         const res = await fetch(`${process.env.BACKEND_API_URL}/api/categories`, {
             method: "POST",
@@ -196,27 +195,13 @@ export const getCategoryDataAction = async (
 
 // get all category
 export const getAllCategoryAction = async()=>{
-     const cookieStore = await cookies();
-    
-        const accessToken = cookieStore.get("accessToken")?.value || null;
-    
-        if(!accessToken){
-           
-            return {
-                success : false,
-                message : "User not logged in!"
-            }
-        }
+     
     
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/categories`, {
-            headers : {
-                Cookie : `accessToken=${accessToken}`
-            },
-    
-            cache : "force-cache",
-            next : {
-                revalidate : 60 * 60 * 24, // 1day
-                tags : ["categories"]
+            cache: "force-cache",
+            next: {
+                revalidate: 60 * 60 * 24, // 1 day
+                tags: ["categories"]
             }
         });
         if (!res.ok) {
