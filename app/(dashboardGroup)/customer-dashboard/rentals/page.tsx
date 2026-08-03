@@ -1,5 +1,12 @@
-export default function MyRentalsPage() {
+import { getPaidRentalOrderAction } from "../../_actions/getConfirmedOrder";
+import CustomerRentalsList from "../../_components/CustomerPaidRentalList";
+
+export default async function MyRentalsPage() {
+const confirmedOrders = await getPaidRentalOrderAction();
+console.log(confirmedOrders,"rentalPage")
   return (
-    <div>MyRentalsPage</div>
+    <div className="mx-auto my-16">
+      <CustomerRentalsList orders={confirmedOrders.data}/>
+    </div>
   );
 }
