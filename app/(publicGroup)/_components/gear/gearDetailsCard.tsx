@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { getGearDetails } from "../../_actions/getGearDetails";
 import { GearItemDetails } from "@/types/gearType";
+import BookingFormCard from "./BookingCard";
 
 // Mock image for better ui. i will solve it
 // const MOCK_GEAR_DATA = {
@@ -47,7 +48,7 @@ export default function GearDetailsCard({gearData}:GearDetailsProps) {
   const gearId = params.id as string;
   const avatar = "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
   // Rental state
-  const [rentalDays, setRentalDays] = useState<number>(1);
+  // const [rentalDays, setRentalDays] = useState<number>(1);
   const [selectedImage, setSelectedImage] = useState<string>(gearData.product_image);
 
   // Fallback gallery images (uses main image + placeholders for demo)
@@ -57,8 +58,8 @@ export default function GearDetailsCard({gearData}:GearDetailsProps) {
     "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=1000&auto=format&fit=crop",
   ];
 
-  const dailyPriceNum = parseFloat(gearData.daily_price);
-  const totalPrice = (dailyPriceNum * rentalDays).toFixed(2);
+  // const dailyPriceNum = parseFloat(gearData.daily_price);
+  // const totalPrice = (dailyPriceNum * rentalDays).toFixed(2);
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 dark:bg-slate-950">
@@ -243,82 +244,8 @@ export default function GearDetailsCard({gearData}:GearDetailsProps) {
           </div>
 
           {/* Right Column: Booking Box */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-24 border-slate-200 shadow-lg dark:border-slate-800">
-              <CardHeader className="space-y-1">
-                <CardTitle className="flex items-baseline justify-between">
-                  <div>
-                    <span className="text-3xl font-extrabold text-slate-900 dark:text-slate-100">
-                      ${gearData.daily_price}
-                    </span>
-                    <span className="text-sm font-normal text-slate-500"> / day</span>
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    Verified Gear
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                {/* Rental Duration Calculator */}
-                <div className="space-y-2">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Rental Duration (Days)
-                  </label>
-                  <div className="flex items-center rounded-lg border border-slate-200 p-1 dark:border-slate-800">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setRentalDays(Math.max(1, rentalDays - 1))}
-                      disabled={rentalDays <= 1}
-                    >
-                      -
-                    </Button>
-                    <span className="flex-1 text-center font-bold text-sm">
-                      {rentalDays} {rentalDays === 1 ? "Day" : "Days"}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setRentalDays(rentalDays + 1)}
-                    >
-                      +
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Price Breakdown */}
-                <div className="space-y-2 rounded-lg bg-slate-50 p-3 text-xs dark:bg-slate-900">
-                  <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                    <span>${gearData.daily_price} × {rentalDays} days</span>
-                    <span>${totalPrice}</span>
-                  </div>
-                  <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                    <span>Service fee</span>
-                    <span>$0.00</span>
-                  </div>
-                  <Separator className="my-1" />
-                  <div className="flex justify-between font-bold text-sm text-slate-900 dark:text-slate-100">
-                    <span>Total Estimate</span>
-                    <span>${totalPrice}</span>
-                  </div>
-                </div>
-
-                {/* Booking Button */}
-                <Button
-                  className="w-full text-base font-semibold py-6"
-                  disabled={!gearData.is_available || gearData.quantity <= 0}
-                >
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Request Booking
-                </Button>
-
-                <p className="text-center text-[11px] text-slate-500">
-                  You won&apos;t be charged until the gear owner accepts your request.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+          <BookingFormCard gearData={gearData}/>
+         
 
         </div>
       </div>

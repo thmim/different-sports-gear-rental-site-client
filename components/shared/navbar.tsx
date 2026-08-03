@@ -172,7 +172,7 @@ export default function Navbar({ user }: NavbarProps) {
                     const Icon = item.icon;
                     return (
                       <DropdownMenuItem 
-                      onClick={async () => { await handleMenuAction(item.href) }}
+                      onClick={async () => { await handleMenuAction("dashboard") }}
                       key={item.href}>
                         {/* <Link href={item.href} className="cursor-pointer flex items-center"> */}
                           <Icon className="mr-2 h-4 w-4" />
