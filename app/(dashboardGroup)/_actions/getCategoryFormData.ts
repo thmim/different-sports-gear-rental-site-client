@@ -5,8 +5,6 @@
 import { isAccessTokenExist } from "@/services/refreshToken";
 // get category form data and call post api to create category
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 type CategoryState = {
     success: boolean;
